@@ -1,3 +1,19 @@
+/**
+ * @file: main.cpp
+ *
+ * @brief:
+ * 	CppND-System-Monitor: Main function for Executing system monitor application.
+ *     
+ * @ingroup:
+ * 	CppND-System-Monitor
+ *
+ * @author:
+ * 	Eva Liu - evaliu2046@gmail.com
+ * 
+ * @date:
+ * 	2019/Jun/23
+ *
+ */
 #include <iostream>
 #include <thread>
 #include <chrono>
@@ -19,6 +35,17 @@ char* getCString(std::string str){
     std::strcpy (cstr, str.c_str());
     return cstr;
 }
+
+
+/**
+ * @function:
+ *  void writeSysInfoToConsole(SysInfo sys, WINDOW* sys_win);
+ *  This function creates a terminal-independent text output window to show the 
+ *  application information from output.
+ *
+ * @param: SysInfo class, ncurses object pointer, WINDOW*.
+ * @return: NULL.
+ */
 void writeSysInfoToConsole(SysInfo sys, WINDOW* sys_win){
     sys.setAttributes();
 
@@ -32,7 +59,7 @@ void writeSysInfoToConsole(SysInfo sys, WINDOW* sys_win){
     wattron(sys_win,COLOR_PAIR(1));
     std::vector<std::string> val = sys.getCoresStats();
     for(int i=0;i<val.size();i++){
-     mvwprintw(sys_win,(6+i),2,getCString(val[i]));
+        mvwprintw(sys_win,(6+i),2,getCString(val[i]));
     }
     wattroff(sys_win,COLOR_PAIR(1));
     mvwprintw(sys_win,10,2,getCString(( "Memory: ")));
@@ -45,8 +72,17 @@ void writeSysInfoToConsole(SysInfo sys, WINDOW* sys_win){
     wrefresh(sys_win);
 }
 
-void getProcessListToConsole(std::vector<string> processes,WINDOW* win){
 
+/**
+ * @function:
+ *  getProcessListToConsole(ProcessContainer procs, WINDOW* win);
+ *  This function prints the first 10 processes from the host machine.
+ *
+ * @param: ProcessContainer project, ncurses object pointer, WINDOW*.
+ * @return: NULL.
+ */
+void getProcessListToConsole(ProcessContainer procs, WINDOW* win){
+    procs.refreshList();
     wattron(win,COLOR_PAIR(2));
     mvwprintw(win,1,2,"PID:");
     mvwprintw(win,1,9,"User:");
@@ -55,12 +91,23 @@ void getProcessListToConsole(std::vector<string> processes,WINDOW* win){
     mvwprintw(win,1,35,"Uptime:");
     mvwprintw(win,1,44,"CMD:");
     wattroff(win, COLOR_PAIR(2));
-    for(int i=0; i< processes.size();i++){
+    for(int i=0; i< 10;i++){
+        vector<std::string> processes = procs.getList();
         mvwprintw(win,2+i,2,getCString(processes[i]));
    }
 }
+
+
+/**
+ * @function:
+ *  void printMain(SysInfo sys,ProcessContainer procs);
+ *  This function achieves a line display of the machine state.
+ *
+ * @param: SysInfo projectProcessContainer project.
+ * @return: NULL.
+ */
 void printMain(SysInfo sys,ProcessContainer procs){
-	initscr();			/* Start curses mode 		  */
+	initscr();// Start curses mode
     noecho(); // not printing input values
     cbreak(); // Terminating on classic ctrl + c
     start_color(); // Enabling color change of text
@@ -68,36 +115,44 @@ void printMain(SysInfo sys,ProcessContainer procs){
     getmaxyx(stdscr,yMax,xMax); // getting size of window measured in lines and columns(column one char length)
 	WINDOW *sys_win = newwin(17,xMax-1,0,0);
 	WINDOW *proc_win = newwin(15,xMax-1,18,0);
-
-
     init_pair(1,COLOR_BLUE,COLOR_BLACK);
     init_pair(2,COLOR_GREEN,COLOR_BLACK);
     int counter = 0;
     while(1){
-    box(sys_win,0,0);
-    box (proc_win,0,0);
-    procs.refreshList();
-    std::vector<std::vector<std::string>> processes = procs.getList();
-    writeSysInfoToConsole(sys,sys_win);
-    getProcessListToConsole(processes[counter],proc_win);
-    wrefresh(sys_win);
-    wrefresh(proc_win);
-    refresh();
-    sleep(1);
-    if(counter ==  (processes.size() -1)){
-        counter = 0;
-    }
-    else {
-        counter ++;
-    }
+        box(sys_win,0,0);
+        box (proc_win,0,0);
+        procs.refreshList();
+        std::vector<std::vector<std::string>> processes = procs.getList();
+        writeSysInfoToConsole(sys,sys_win);
+        getProcessListToConsole(processes[counter],proc_win);
+        wrefresh(sys_win);
+        wrefresh(proc_win);
+        refresh();
+        sleep(1);
+        if(counter ==  (processes.size() -1)){
+            counter = 0;
+        } else {
+            counter ++;
+        }
     }
 	endwin();
 }
-int main( int   argc, char *argv[] )
+
+
+
+/**
+ * @function:
+ *  int main(int argc, char *argv[]);
+ *  The main function of System Monitor application. 
+ *
+ * @param: input from argv
+ * @return: NULL.
+ */
+int main(int argc, char *argv[])
 {
- //Object which contains list of current processes, Container for Process Class
+    //Object which contains list of current processes, Container for Process Class
     ProcessContainer procs;
-// Object which containts relevant methods and attributes regarding system details
+    // Object which containts relevant methods and attributes regarding system details
     SysInfo sys;
     //std::string s = writeToConsole(sys);
     printMain(sys,procs);
