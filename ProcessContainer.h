@@ -1,3 +1,20 @@
+/**
+ * @file: ProcessContainer.h
+ *
+ * @brief:
+ * 	CppND-System-Monitor: Header file for containing all of the processes.
+ *     
+ * @ingroup:
+ * 	CppND-System-Monitor
+ *
+ * @author:
+ * 	Eva Liu - evaliu2046@gmail.com
+ * 
+ * @date:
+ * 	2019/Jun/23
+ *
+ */
+
 #include "Process.h"
 #include <vector>
 class ProcessContainer{
@@ -13,6 +30,15 @@ public:
     std::vector<std::vector<std::string>> getList();
 };
 
+
+/**
+ * @function:
+ *  std::string ProcessContainer::refreshList();
+ *  This function updates current process list.
+ *
+ * @param: NULL
+ * @return: NULL
+ */
 void ProcessContainer::refreshList(){
     std::vector<std::string> pidList = ProcessParser::getPidList();
     this->_list.clear();
@@ -21,6 +47,16 @@ void ProcessContainer::refreshList(){
         this->_list.push_back(proc);
     }
 }
+
+
+/**
+ * @function:
+ *  std::string ProcessContainer::printList();
+ *  This function prints all the processes.
+ *
+ * @param: NULL
+ * @return: string of processes.
+ */
 std::string ProcessContainer::printList(){
     std::string result="";
     for(int i=0;i<this->_list.size();i++){
@@ -28,6 +64,16 @@ std::string ProcessContainer::printList(){
     }
     return result;
 }
+
+
+/**
+ * @function:
+ *  std::vector<std::vector<std::string> > ProcessContainer::getList();
+ *  The getter function returns the list of processes.
+ *
+ * @param: NULL
+ * @return: List of the running process.
+ */
 std::vector<std::vector<std::string> > ProcessContainer::getList(){
     std::vector<std::vector<std::string>> values;
     std::vector<std::string> stringifiedList;
