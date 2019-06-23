@@ -1,3 +1,20 @@
+/**
+ * @file: SysInfo.h
+ *
+ * @brief:
+ * 	CppND-System-Monitor: Header file for system information file.
+ *     
+ * @ingroup:
+ * 	CppND-System-Monitor
+ *
+ * @author:
+ * 	Eva Liu - evaliu2046@gmail.com
+ * 
+ * @date:
+ * 	2019/Jun/23
+ *
+ */
+
 #include <string>
 #include <iostream>
 #include <vector>
@@ -45,6 +62,17 @@ public:
     void setCpuCoresStats();
     std::vector<std::string> getCoresStats()const;
 };
+
+
+/**
+ * @function:
+ *  void SysInfo::getOtherCores(int _size);
+ *  This function initializes attributes in SysInfo class. Set previous data for 
+ *  specific CPU core.
+ *
+ * @param: number of cores(size).
+ * @return: NULL
+ */
 void SysInfo::getOtherCores(int _size){
 //when number of cores is detected, vectors are modified to fit incoming data
         this->coresStats = std::vector<std::string>();
@@ -60,6 +88,16 @@ void SysInfo::getOtherCores(int _size){
 void SysInfo::setLastCpuMeasures(){
  this->lastCpuStats = ProcessParser::getSysCpuPercent();
 }
+
+
+/**
+ * @function:
+ *  void SysInfo::setCpuCoresStats();
+ *  This function retrieves data for a specific running process
+ *
+ * @param: a unique process ID (PID)
+ * @return: memory usage data.
+ */
 void SysInfo::setCpuCoresStats(){
 // Getting data from files (previous data is required)
     for(int i=0;i<this->currentCpuCoresStats.size();i++){
@@ -71,6 +109,8 @@ void SysInfo::setCpuCoresStats(){
     }
     this->lastCpuCoresStats = this->currentCpuCoresStats;
 }
+
+
 void SysInfo::setAttributes(){
 // getting parsed data
     this-> memPercent = ProcessParser::getSysRamPercent();
