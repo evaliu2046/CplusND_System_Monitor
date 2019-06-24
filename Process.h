@@ -37,22 +37,37 @@ public:
         this->mem = ProcessParser::getVmSize(pid);
         this->cpu = ProcessParser::getCpuPercent(pid);
         this->upTime = ProcessParser::getProcUpTime(pid);
-        this->cmd = getCmd(pid);
+        this->cmd = getCmd();
     }
-    void setPid(int pid);
+    void setPid(string pid);
     string getPid()const;
     string getUser()const;
     string getCmd()const;
-    int getCpu()const;
-    int getMem()const;
+    string getCpu()const;
+    string getMem()const;
     string getUpTime()const;
     string getProcess();
 };
-void Process::setPid(int pid){
+void Process::setPid(string pid){
     this->pid = pid;
 }
 string Process::getPid()const {
     return this->pid;
+}
+string Process::getUser()const {
+    return this->user;
+}
+string Process::getCmd()const {
+    return this->cmd;
+}
+string Process::getCpu()const {
+    return this->cpu;
+}
+string Process::getMem()const {
+    return this->mem;
+}
+string Process::getUpTime()const {
+    return this->upTime;
 }
 
 /**

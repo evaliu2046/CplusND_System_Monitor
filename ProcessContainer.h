@@ -16,20 +16,24 @@
  */
 
 #include "Process.h"
+#include <string>
 #include <vector>
-class ProcessContainer{
+using std::string;
+using std::vector;
 
-private:
-    std::vector<Process>_list;
-public:
-    ProcessContainer(){
-        this->refreshList();
-    }
-    void refreshList();
-    std::string printList();
-    std::vector<std::vector<std::string>> getList();
+class ProcessContainer {
+    public:
+        ProcessContainer()
+        {
+            this->refreshList();
+        }
+        void refreshList();
+        string printList();
+        vector<string> getList();
+
+    private:
+        vector<Process> _list;
 };
-
 
 /**
  * @function:
@@ -39,15 +43,15 @@ public:
  * @param: NULL
  * @return: NULL
  */
-void ProcessContainer::refreshList(){
-    std::vector<std::string> pidList = ProcessParser::getPidList();
+void ProcessContainer::refreshList()
+{
+    vector<string> pids = ProcessParser::getPidList();
     this->_list.clear();
-    for(int i=0;i<pidList.size();i++){
-        Process proc(pidList[i]);
+    for (auto pid : pids) {
+        Process proc(pid);
         this->_list.push_back(proc);
     }
 }
-
 
 /**
  * @function:
@@ -57,14 +61,14 @@ void ProcessContainer::refreshList(){
  * @param: NULL
  * @return: string of processes.
  */
-std::string ProcessContainer::printList(){
+string ProcessContainer::printList()
+{
     std::string result="";
-    for(int i=0;i<this->_list.size();i++){
-        result += this->_list[i].getProcess();
+    for (auto i : _list) {
+        result += i.getProcess();
     }
     return result;
 }
-
 
 /**
  * @function:
@@ -74,23 +78,11 @@ std::string ProcessContainer::printList(){
  * @param: NULL
  * @return: List of the running process.
  */
-std::vector<std::vector<std::string> > ProcessContainer::getList(){
-    std::vector<std::vector<std::string>> values;
-    std::vector<std::string> stringifiedList;
-    for(int i=0; i<ProcessContainer::_list.size(); i++){
-        stringifiedList.push_back(ProcessContainer::_list[i].getProcess());
+vector<string> ProcessContainer::getList() 
+{
+    vector<string> values;
+    for (int i = (this->_list.size()-10); i < this->_list.size(); i++){
+        values.push_back(this->_list[i].getProcess());
     }
-    int lastIndex = 0;
-    for (int i=0; i<stringifiedList.size();i++){
-        if(i %10 == 0 && i > 0){
-          std::vector<std::string>  sub(&stringifiedList[i-10], &stringifiedList[i]);
-          values.push_back(sub);
-          lastIndex = i;
-        }
-        if(i == (ProcessContainer::_list.size() - 1) && (i-lastIndex)<10){
-            std::vector<std::string> sub(&stringifiedList[lastIndex],&stringifiedList[i+1]);
-            values.push_back(sub);
-        }
-   }
     return values;
 }
