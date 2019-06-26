@@ -37,7 +37,7 @@ public:
         this->mem = ProcessParser::getVmSize(pid);
         this->cpu = ProcessParser::getCpuPercent(pid);
         this->upTime = ProcessParser::getProcUpTime(pid);
-        this->cmd = getCmd();
+        this->cmd = ProcessParser::getCmd(pid);
     }
     void setPid(string pid);
     string getPid()const;

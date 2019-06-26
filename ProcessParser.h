@@ -103,6 +103,7 @@ std::string ProcessParser::getCmd(std::string pid){
  */
 std::vector<std::string> ProcessParser::getPidList(){
     DIR* dir;
+    dir = opendir("/proc/");
     std::vector<std::string> container;
     if (!(dir = opendir("/proc")))
         throw std::runtime_error(std::strerror(errno));
@@ -252,7 +253,7 @@ std::string ProcessParser::getProcUser(std::string pid){
         }
     }
     // Get name of the user with UID
-    stream = Util::getStream("/etc/passwd/");
+    stream = Util::getStream("/etc/passwd");
     name = ("x:" + result);
     while (std::getline(stream, line)) {
         if (line.find(name) != std::string::npos){
@@ -473,7 +474,7 @@ int ProcessParser::getNumberOfRunningProcesses(){
 std::string ProcessParser::getOSName(){
     string line;
     string name = "PRETTY_NAME=";
-    ifstream stream = Util::getStream("/etc/os-release/");
+    ifstream stream = Util::getStream("/etc/os-release");
     while (std::getline(stream, line)){
         if (line.compare(0, name.size(), name) == 0){
             std::size_t found = line.find("=");
